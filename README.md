@@ -16,6 +16,10 @@ get the Postman collection in `Grid Principle.postman_collection.json` at root d
         ```sh
         docker-compose up -d
         ```
+    - set mongo replication
+        ```sh
+        docker-compose exec mongo mongosh --eval "rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'localhost:27017'}]});"
+        ```
     - create new database
     - set up the port and the mysql as per your database in .env.local file
     - install depedencies
