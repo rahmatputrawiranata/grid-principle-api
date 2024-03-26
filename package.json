@@ -1,0 +1,85 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "description": "skeleton project for express",
+  "main": "index.js",
+  "author": "rahmat putra",
+  "license": "MIT",
+  "dependencies": {
+    "@prisma/client": "^4.8.0",
+    "@sendgrid/mail": "^7.7.0",
+    "@types/amqplib": "^0.10.1",
+    "amqplib": "^0.10.3",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "faker": "^6.6.6",
+    "ioredis": "^5.3.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "scripts": {
+    "set-env-local": "./node_modules/.bin/dotenv -e .env.local -- ",
+    "set-env-prod": "./node_modules/.bin/dotenv -e .env.prod -- ",
+    "set-env-test": "./node_modules/.bin/dotenv -e .env.test -- ",
+    "build": "rimraf dist && npx tsc",
+    "start": "yarn set-env-prod node dist/index.js",
+    "test": "yarn set-env-test mocha -r ts-node/register src/test/**/*.spec.ts --exit",
+    "test:coverage": "nyc yarn run test",
+    "prisma:migrate": "yarn set-env-local yarn prisma migrate deploy --schema=./prisma-mysql/schema.prisma && yarn prisma generate --schema=./prisma-mysql/schema.prisma && yarn prisma generate --schema=./prisma-mongo/schema.prisma",
+    "prisma:migrate-test": "yarn set-env-test yarn prisma migrate deploy",
+    "dev": "yarn set-env-local concurrently \"npx tsc --watch\" \"nodemon -q src/index.ts\""
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "@istanbuljs/nyc-config-typescript": "^1.0.2",
+    "@types/bcrypt": "^5.0.2",
+    "@types/body-parser": "^1.19.2",
+    "@types/chai": "^4.3.4",
+    "@types/chai-http": "^4.2.0",
+    "@types/express": "^4.17.15",
+    "@types/faker": "^6.6.9",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^18.11.17",
+    "@types/sinon": "^10.0.13",
+    "@types/sinon-chai": "^3.2.9",
+    "chai": "^4.3.7",
+    "chai-http": "^4.3.0",
+    "concurrently": "^7.6.0",
+    "dotenv-cli": "^6.0.0",
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.20",
+    "nyc": "^15.1.0",
+    "prisma": "^5.11.0",
+    "rimraf": "^3.0.2",
+    "sinon": "^15.0.1",
+    "sinon-chai": "^3.7.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "nyc": {
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "check-coverage": true,
+    "all": true,
+    "include": [
+      "src/module/**/**.ts"
+    ],
+    "exclude": [
+      "src/test/**/*.*",
+      "src/**/index.ts",
+      "docker",
+      "src/utils/type.ts"
+    ],
+    "reporter": [
+      "html",
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "report-dir": "coverage"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  }
+}
